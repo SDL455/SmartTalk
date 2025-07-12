@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/get_utils/get_utils.dart';
+import 'package:whatsapp/cores/colors/%E0%BA%B1app_theme.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -24,14 +25,14 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.chat_bubble, size: 60, color: Color(0xFF075E54)),
+                Image.asset('icons/icons.jpeg', width: 100, height: 100),
                 SizedBox(height: 20),
                 Text(
-                  'Welcome Back',
+                  'SmartTalK',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF075E54),
+                    color: AppTheme.primaryColor,
                   ),
                 ),
                 SizedBox(height: 40),
@@ -77,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF075E54),
+                    backgroundColor: AppTheme.primaryColor,
                     foregroundColor: Colors.white,
                     minimumSize: Size(double.infinity, 50),
                   ),
@@ -89,11 +90,11 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Text('Don\'t have an account? '),
                     GestureDetector(
-                      onTap: () => Get.back(),
+                      onTap: () => Get.toNamed('/register'),
                       child: Text(
                         'Sign up',
                         style: TextStyle(
-                          color: Color(0xFF075E54),
+                          color: AppTheme.primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
