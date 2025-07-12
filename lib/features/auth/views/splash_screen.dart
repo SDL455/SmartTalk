@@ -11,7 +11,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 3), () {
-      Get.offAllNamed('/registration');
+      Get.offAllNamed('/login');
     });
   }
 
