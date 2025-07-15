@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:get/get.dart';
 import 'package:whatsapp/cores/models/chat.dart';
+import 'widgets/chat_message_list.dart';
+import 'widgets/chat_input_field.dart';
+import 'dart:io';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -62,6 +65,18 @@ class _ChatPageState extends State<ChatPage> {
     _addMessage(textMessage);
   }
 
+  void _handleSendImage(File imageFile) {
+    final imageMessage = types.ImageMessage(
+      author: _user,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: imageFile.path.split('/').last,
+      size: imageFile.lengthSync(),
+      uri: imageFile.path,
+    );
+    _addMessage(imageMessage);
+  }
+
   @override
   Widget build(BuildContext context) {
     final chat = Get.arguments as Chat?;
@@ -117,18 +132,17 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ],
       ),
-      // body: Chat(
-      //   messages: _messages,
-      //   onSendPressed: _handleSendPressed,
-      //   user: _user,
-      //   theme: DefaultChatTheme(
-      //     primaryColor: Color(0xFF075E54),
-      //     secondaryColor: Color(0xFFE8F5E8),
-      //     inputBackgroundColor: Colors.white,
-      //     inputTextColor: Colors.black,
-      //     messageBorderRadius: 15,
-      //   ),
-      // ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ChatMessageList(messages: _messages, user: _user),
+          ),
+          ChatInputField(
+            onSendPressed: _handleSendPressed,
+            onSendImage: _handleSendImage,
+          ),
+        ],
+      ),
     );
   }
 }
