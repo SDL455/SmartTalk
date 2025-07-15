@@ -42,40 +42,85 @@ class _ChatInputFieldState extends State<ChatInputField> {
       context: context,
       builder: (context) {
         return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.camera_alt, color: Color(0xFF075E54)),
-                title: Text('Take Photo'),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final XFile? pickedFile = await _picker.pickImage(
-                    source: ImageSource.camera,
-                    imageQuality: 80,
-                    maxWidth: 1024,
-                  );
-                  if (pickedFile != null && widget.onSendImage != null) {
-                    widget.onSendImage!(File(pickedFile.path));
-                  }
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo_library, color: Color(0xFF075E54)),
-                title: Text('Choose from Gallery'),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final XFile? pickedFile = await _picker.pickImage(
-                    source: ImageSource.gallery,
-                    imageQuality: 80,
-                    maxWidth: 1024,
-                  );
-                  if (pickedFile != null && widget.onSendImage != null) {
-                    widget.onSendImage!(File(pickedFile.path));
-                  }
-                },
-              ),
-            ],
+          child: Container(
+            margin: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Color(0xFF075E54), width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 2,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 6,
+                    horizontal: 0,
+                  ),
+                  child: ListTile(
+                    leading: Icon(Icons.camera_alt, color: Color(0xFF075E54)),
+                    title: Text(
+                      'Take Photo',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      final XFile? pickedFile = await _picker.pickImage(
+                        source: ImageSource.camera,
+                        imageQuality: 80,
+                        maxWidth: 1024,
+                      );
+                      if (pickedFile != null && widget.onSendImage != null) {
+                        widget.onSendImage!(File(pickedFile.path));
+                      }
+                    },
+                  ),
+                ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 2,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 6,
+                    horizontal: 0,
+                  ),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.photo_library,
+                      color: Color(0xFF075E54),
+                    ),
+                    title: Text(
+                      'Choose from Gallery',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      final XFile? pickedFile = await _picker.pickImage(
+                        source: ImageSource.gallery,
+                        imageQuality: 80,
+                        maxWidth: 1024,
+                      );
+                      if (pickedFile != null && widget.onSendImage != null) {
+                        widget.onSendImage!(File(pickedFile.path));
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whatsapp/cores/colors/%E0%BA%B1app_theme.dart';
 import 'package:whatsapp/cores/models/chat.dart';
+import 'package:whatsapp/features/chat/views/call_page.dart';
 import 'package:whatsapp/features/chat/views/chat_page.dart';
+import 'package:whatsapp/features/chat/views/page_contact.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -46,7 +49,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this, initialIndex: 1);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
   }
 
   @override
@@ -69,9 +72,7 @@ class _HomePageState extends State<HomePage>
           controller: _tabController,
           indicatorColor: Colors.white,
           tabs: [
-            Tab(icon: Icon(Icons.camera_alt, color: Colors.white)),
             Tab(text: 'CHATS'),
-            Tab(text: 'STATUS'),
             Tab(text: 'CALLS'),
           ],
           labelColor: Colors.white,
@@ -81,16 +82,14 @@ class _HomePageState extends State<HomePage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Camera Tab
-          Center(child: Text('Camera')),
-          // Chats Tab
+          // CHATS Tab
           ListView.builder(
             itemCount: chats.length,
             itemBuilder: (context, index) {
               final chat = chats[index];
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Color(0xFF075E54),
+                  backgroundColor: AppTheme.primaryColor,
                   child: Text(
                     chat.avatar,
                     style: TextStyle(color: Colors.white),
@@ -126,16 +125,26 @@ class _HomePageState extends State<HomePage>
               );
             },
           ),
-          // Status Tab
-          Center(child: Text('Status')),
-          // Calls Tab
-          Center(child: Text('Calls')),
+
+          // CALLS Tab
+          CallPage(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Color(0xFF25D366),
-        child: Icon(Icons.message, color: Colors.white),
+        onPressed: () {
+          Get.to(
+            () => PageContact(),
+            transition: Transition.rightToLeft,
+            duration: Duration(milliseconds: 300),
+          );
+        },
+        backgroundColor: AppTheme.primaryColor,
+        child: Image.asset(
+          'icons/chat.png',
+          width: 34,
+          height: 34,
+          color: Colors.white,
+        ),
       ),
     );
   }
