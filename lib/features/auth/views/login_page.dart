@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/get_utils/get_utils.dart';
 import 'package:whatsapp/cores/colors/%E0%BA%B1app_theme.dart';
 
 class LoginPage extends StatefulWidget {
@@ -74,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Get.offAllNamed('/home');
+                      Get.offAllNamed('/dashboard');
                     }
                   },
                   style: ElevatedButton.styleFrom(

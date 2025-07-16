@@ -65,7 +65,30 @@ class _DashboardPageState extends State<DashboardPage>
           ),
           IconButton(
             icon: Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Logout'),
+                  content: Text('Do you want to logout?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushReplacementNamed('/login');
+                      },
+                      child: Text('Logout'),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
         bottom: TabBar(
@@ -82,7 +105,6 @@ class _DashboardPageState extends State<DashboardPage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          // CHATS Tab
           ListView.builder(
             itemCount: chats.length,
             itemBuilder: (context, index) {
@@ -126,7 +148,6 @@ class _DashboardPageState extends State<DashboardPage>
             },
           ),
 
-          // CALLS Tab
           CallPage(),
         ],
       ),
