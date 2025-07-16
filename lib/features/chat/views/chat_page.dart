@@ -1,148 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:get/get.dart';
+import 'package:whatsapp/cores/colors/%E0%BA%B1app_theme.dart';
 import 'package:whatsapp/cores/models/chat.dart';
-import 'widgets/chat_message_list.dart';
-import 'widgets/chat_input_field.dart';
-import 'dart:io';
+import 'package:whatsapp/features/chat/views/message_page.dart';
 
-class ChatPage extends StatefulWidget {
-  @override
-  _ChatPageState createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
-  final List<types.Message> _messages = [];
-  final _user = types.User(id: '1');
-  final _otherUser = types.User(id: '2');
-
-  @override
-  void initState() {
-    super.initState();
-    _loadMessages();
-  }
-
-  void _loadMessages() {
-    final messages = [
-      types.TextMessage(
-        author: _otherUser,
-        createdAt: DateTime.now().millisecondsSinceEpoch - 60000,
-        id: '1',
-        text: 'Hello! How are you?',
-      ),
-      types.TextMessage(
-        author: _user,
-        createdAt: DateTime.now().millisecondsSinceEpoch - 30000,
-        id: '2',
-        text: 'Hi! I\'m doing great, thanks for asking!',
-      ),
-      types.TextMessage(
-        author: _otherUser,
-        createdAt: DateTime.now().millisecondsSinceEpoch - 15000,
-        id: '3',
-        text: 'That\'s wonderful to hear!',
-      ),
-    ];
-    setState(() {
-      _messages.addAll(messages);
-    });
-  }
-
-  void _addMessage(types.Message message) {
-    setState(() {
-      _messages.insert(0, message);
-    });
-  }
-
-  void _handleSendPressed(types.PartialText message) {
-    final textMessage = types.TextMessage(
-      author: _user,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      text: message.text,
-    );
-
-    _addMessage(textMessage);
-  }
-
-  void _handleSendImage(File imageFile) {
-    final imageMessage = types.ImageMessage(
-      author: _user,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: imageFile.path.split('/').last,
-      size: imageFile.lengthSync(),
-      uri: imageFile.path,
-    );
-    _addMessage(imageMessage);
-  }
+class ChatPage extends StatelessWidget {
+  final List<Chat> chats = [
+    Chat(
+      name: 'Alice Johnson',
+      lastMessage: 'Hey! How are you doing?',
+      time: '10:30 AM',
+      unreadCount: 2,
+      avatar: 'A',
+    ),
+    Chat(
+      name: 'Bob Smith',
+      lastMessage: 'Can we meet tomorrow?',
+      time: '9:15 AM',
+      unreadCount: 0,
+      avatar: 'B',
+    ),
+    Chat(
+      name: 'Carol Davis',
+      lastMessage: 'Thanks for the help!',
+      time: 'Yesterday',
+      unreadCount: 1,
+      avatar: 'C',
+    ),
+    Chat(
+      name: 'David Wilson',
+      lastMessage: 'See you later!',
+      time: 'Yesterday',
+      unreadCount: 0,
+      avatar: 'D',
+    ),
+  ];
+  ChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final chat = Get.arguments as Chat?;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF075E54),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
-        ),
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Text(
-                chat?.avatar ?? 'U',
-                style: TextStyle(color: Color(0xFF075E54)),
-              ),
-            ),
-            SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  chat?.name ?? 'User',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+    return ListView.builder(
+      itemCount: chats.length,
+      itemBuilder: (context, index) {
+        final chat = chats[index];
+        return ListTile(
+          leading: CircleAvatar(
+            backgroundColor: AppTheme.primaryColor,
+            child: Text(chat.avatar, style: TextStyle(color: Colors.white)),
+          ),
+          title: Text(chat.name, style: TextStyle(fontWeight: FontWeight.bold)),
+          subtitle: Text(chat.lastMessage),
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(chat.time, style: TextStyle(fontSize: 12)),
+              if (chat.unreadCount > 0)
+                Container(
+                  margin: EdgeInsets.only(top: 4),
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF25D366),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    chat.unreadCount.toString(),
+                    style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),
-                Text(
-                  'Online',
-                  style: TextStyle(color: Colors.white70, fontSize: 12),
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.videocam, color: Colors.white),
-            onPressed: () {},
+            ],
           ),
-          IconButton(
-            icon: Icon(Icons.call, color: Colors.white),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ChatMessageList(messages: _messages, user: _user),
-          ),
-          ChatInputField(
-            onSendPressed: _handleSendPressed,
-            onSendImage: _handleSendImage,
-          ),
-        ],
-      ),
+          onTap: () {
+            Get.to(() => MessagePage(), arguments: chat);
+          },
+        );
+      },
     );
   }
 }

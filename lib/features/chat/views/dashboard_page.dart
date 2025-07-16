@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:whatsapp/cores/colors/%E0%BA%B1app_theme.dart';
-import 'package:whatsapp/cores/models/chat.dart';
 import 'package:whatsapp/features/chat/views/call_page.dart';
 import 'package:whatsapp/features/chat/views/chat_page.dart';
 import 'package:whatsapp/features/chat/views/page_contact.dart';
+import 'package:whatsapp/features/chat/views/profile_page.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -12,159 +11,320 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
-
-  final List<Chat> chats = [
-    Chat(
-      name: 'Alice Johnson',
-      lastMessage: 'Hey! How are you doing?',
-      time: '10:30 AM',
-      unreadCount: 2,
-      avatar: 'A',
-    ),
-    Chat(
-      name: 'Bob Smith',
-      lastMessage: 'Can we meet tomorrow?',
-      time: '9:15 AM',
-      unreadCount: 0,
-      avatar: 'B',
-    ),
-    Chat(
-      name: 'Carol Davis',
-      lastMessage: 'Thanks for the help!',
-      time: 'Yesterday',
-      unreadCount: 1,
-      avatar: 'C',
-    ),
-    Chat(
-      name: 'David Wilson',
-      lastMessage: 'See you later!',
-      time: 'Yesterday',
-      unreadCount: 0,
-      avatar: 'D',
-    ),
-  ];
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    _tabController = TabController(length: 2, vsync: this);
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
+    _tabController.addListener(() {
+      setState(() {
+        _currentIndex = _tabController.index;
+      });
+    });
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('SmartTalk', style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF075E54),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.white),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Logout'),
-                  content: Text('Do you want to logout?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pushReplacementNamed('/login');
-                      },
-                      child: Text('Logout'),
-                    ),
+      backgroundColor: Color(0xFFF8F9FA),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Column(
+          children: [
+            // Modern Header with Glassmorphism Effect
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    const Color.fromARGB(255, 9, 117, 104),
+                    const Color.fromARGB(255, 9, 123, 110),
                   ],
                 ),
-              );
-            },
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          tabs: [
-            Tab(text: 'CHATS'),
-            Tab(text: 'CALLS'),
-          ],
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          ListView.builder(
-            itemCount: chats.length,
-            itemBuilder: (context, index) {
-              final chat = chats[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: AppTheme.primaryColor,
-                  child: Text(
-                    chat.avatar,
-                    style: TextStyle(color: Colors.white),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(35),
+                  bottomRight: Radius.circular(35),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xFF6C5CE7).withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: Offset(0, 10),
                   ),
-                ),
-                title: Text(
-                  chat.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(chat.lastMessage),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(chat.time, style: TextStyle(fontSize: 12)),
-                    if (chat.unreadCount > 0)
+                ],
+              ),
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(24, 20, 24, 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Top Row with Avatar and Actions
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(
+                                () => ProfilePage(),
+                                transition: Transition.leftToRight,
+                                duration: Duration(milliseconds: 300),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.3),
+                                  width: 2,
+                                ),
+                              ),
+                              child: CircleAvatar(
+                                radius: 22,
+                                backgroundColor: Colors.white.withValues(
+                                  alpha: 0.2,
+                                ),
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.search_rounded,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                          SizedBox(width: 12),
+                          Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.notifications_rounded,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 50),
+                      // Custom Segmented Control
                       Container(
-                        margin: EdgeInsets.only(top: 4),
                         padding: EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: Color(0xFF25D366),
-                          shape: BoxShape.circle,
+                          color: Colors.white.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(25),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            width: 1,
+                          ),
                         ),
-                        child: Text(
-                          chat.unreadCount.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => _tabController.animateTo(0),
+                                child: AnimatedContainer(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                  padding: EdgeInsets.symmetric(vertical: 14),
+                                  decoration: BoxDecoration(
+                                    color: _currentIndex == 0
+                                        ? Colors.white
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: _currentIndex == 0
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.black.withValues(
+                                                alpha: 0.1,
+                                              ),
+                                              blurRadius: 8,
+                                              offset: Offset(0, 2),
+                                            ),
+                                          ]
+                                        : [],
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.chat_bubble_rounded,
+                                        size: 22,
+                                        color: _currentIndex == 0
+                                            ? Color(0xFF6C5CE7)
+                                            : Colors.white,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Messages',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: _currentIndex == 0
+                                              ? Color(0xFF6C5CE7)
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => _tabController.animateTo(1),
+                                child: AnimatedContainer(
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                  padding: EdgeInsets.symmetric(vertical: 14),
+                                  decoration: BoxDecoration(
+                                    color: _currentIndex == 1
+                                        ? Colors.white
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: _currentIndex == 1
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.black.withValues(
+                                                alpha: 0.1,
+                                              ),
+                                              blurRadius: 8,
+                                              offset: Offset(0, 2),
+                                            ),
+                                          ]
+                                        : [],
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.call_rounded,
+                                        size: 22,
+                                        color: _currentIndex == 1
+                                            ? Color(0xFF6C5CE7)
+                                            : Colors.white,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Calls',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: _currentIndex == 1
+                                              ? Color(0xFF6C5CE7)
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                  ],
+                    ],
+                  ),
                 ),
-                onTap: () {
-                  Get.to(() => ChatPage(), arguments: chat);
-                },
-              );
-            },
-          ),
-
-          CallPage(),
-        ],
+              ),
+            ),
+            // Content Area
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [ChatPage(), CallPage()],
+              ),
+            ),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(
-            () => PageContact(),
-            transition: Transition.rightToLeft,
-            duration: Duration(milliseconds: 300),
-          );
-        },
-        backgroundColor: AppTheme.primaryColor,
-        child: Image.asset(
-          'icons/chat.png',
-          width: 34,
-          height: 34,
-          color: Colors.white,
+      floatingActionButton: Container(
+        width: 65,
+        height: 65,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF6C5CE7), Color(0xFF74B9FF)],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xFF6C5CE7).withValues(alpha: 0.4),
+              blurRadius: 20,
+              offset: Offset(0, 10),
+            ),
+          ],
+        ),
+        child: FloatingActionButton(
+          onPressed: () {
+            Get.to(
+              () => PageContact(),
+              transition: Transition.zoom,
+              duration: Duration(milliseconds: 500),
+            );
+          },
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: AnimatedSwitcher(
+            duration: Duration(milliseconds: 400),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(scale: animation, child: child);
+            },
+            child: Icon(
+              _currentIndex == 0 ? Icons.add_rounded : Icons.dialpad_rounded,
+              key: ValueKey(_currentIndex),
+              color: Colors.white,
+              size: 30,
+            ),
+          ),
         ),
       ),
     );

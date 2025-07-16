@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whatsapp/cores/colors/%E0%BA%B1app_theme.dart';
 import 'package:whatsapp/features/auth/views/login_page.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -114,9 +115,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF075E54),
+                    backgroundColor: AppTheme.primaryColor,
                     foregroundColor: Colors.white,
                     minimumSize: Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 4,
                   ),
                   child: Text('Create Account', style: TextStyle(fontSize: 16)),
                 ),

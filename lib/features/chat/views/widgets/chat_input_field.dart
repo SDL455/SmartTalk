@@ -4,6 +4,8 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import 'package:whatsapp/cores/colors/%E0%BA%B1app_theme.dart';
+
 class ChatInputField extends StatefulWidget {
   final void Function(types.PartialText) onSendPressed;
   final void Function(File)? onSendImage;
@@ -156,12 +158,15 @@ class _ChatInputFieldState extends State<ChatInputField> {
                 IconButton(
                   icon: const Icon(
                     Icons.emoji_emotions_outlined,
-                    color: Color(0xFF075E54),
+                    color: AppTheme.whatsAppGreen,
                   ),
                   onPressed: _toggleEmojiPicker,
                 ),
                 IconButton(
-                  icon: const Icon(Icons.camera_alt, color: Color(0xFF075E54)),
+                  icon: const Icon(
+                    Icons.camera_alt,
+                    color: AppTheme.whatsAppGreen,
+                  ),
                   onPressed: _onCameraPressed,
                 ),
                 Expanded(
@@ -192,7 +197,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                 config: Config(
                   height: 250,
                   emojiViewConfig: EmojiViewConfig(
-                    emojiSizeMax: 32,
+                    emojiSizeMax: 22,
                     backgroundColor: Color(0xFFF2F2F2),
                   ),
                   categoryViewConfig: CategoryViewConfig(

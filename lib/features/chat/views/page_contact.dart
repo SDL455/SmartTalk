@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp/cores/colors/%E0%BA%B1app_theme.dart';
-import 'package:whatsapp/features/chat/views/chat_page.dart';
+import 'package:whatsapp/features/chat/views/message_page.dart';
 
 class Contact {
   final String name;
@@ -71,7 +71,7 @@ class PageContact extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => ChatPage()),
+                MaterialPageRoute(builder: (_) => MessagePage()),
               );
             },
             trailing: Icon(

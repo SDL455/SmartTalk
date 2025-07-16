@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:whatsapp/features/auth/views/login_page.dart';
 import 'package:whatsapp/features/auth/views/registeration_page.dart';
 import 'package:whatsapp/features/auth/views/splash_screen.dart';
-import 'package:whatsapp/features/chat/views/chat_page.dart';
+import 'package:whatsapp/features/chat/views/message_page.dart';
 import 'package:whatsapp/features/chat/views/dashboard_page.dart';
 
 class AppRoutes {
@@ -18,7 +18,7 @@ class AppRoutes {
     GetPage(name: login, page: () => LoginPage()),
     GetPage(name: register, page: () => RegistrationPage()),
     GetPage(name: home, page: () => DashboardPage()),
-    GetPage(name: call, page: () => ChatPage()),
+    GetPage(name: call, page: () => MessagePage()),
     // GetPage(name: chat, page: () => Chat()),
   ];
 }
