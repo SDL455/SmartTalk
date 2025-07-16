@@ -48,6 +48,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -87,7 +89,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                   end: Alignment.bottomRight,
                                   colors: [
                                     AppTheme.primaryColor,
-                                    AppTheme.primaryColor.withOpacity(0.8),
+                                    AppTheme.primaryColor.withValues(
+                                      alpha: 0.8,
+                                    ),
                                   ],
                                 ),
                                 boxShadow: [
@@ -111,7 +115,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               shaderCallback: (bounds) => LinearGradient(
                                 colors: [
                                   AppTheme.primaryColor,
-                                  AppTheme.primaryColor.withOpacity(0.8),
+                                  AppTheme.primaryColor.withValues(alpha: 0.8),
                                 ],
                               ).createShader(bounds),
                               child: Text(
@@ -151,7 +155,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
+                                    color: Colors.grey.withValues(alpha: 0.1),
                                     blurRadius: 10,
                                     offset: Offset(0, 5),
                                   ),
@@ -177,7 +181,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
+                                    color: Colors.grey.withValues(alpha: 0.1),
                                     blurRadius: 10,
                                     offset: Offset(0, 5),
                                   ),
@@ -237,13 +241,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             gradient: LinearGradient(
                               colors: [
                                 AppTheme.primaryColor,
-                                AppTheme.primaryColor.withOpacity(0.8),
+                                AppTheme.primaryColor.withValues(alpha: 0.8),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.primaryColor.withOpacity(0.3),
+                                color: AppTheme.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                                 blurRadius: 15,
                                 offset: Offset(0, 8),
                               ),
@@ -340,7 +346,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Color(0xFF1877F3).withOpacity(0.2),
+                                      color: Color(
+                                        0xFF1877F3,
+                                      ).withValues(alpha: 0.2),
                                       blurRadius: 10,
                                       offset: Offset(0, 5),
                                     ),
@@ -360,7 +368,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Color(0xFFDB4437).withOpacity(0.2),
+                                      color: Color(
+                                        0xFFDB4437,
+                                      ).withValues(alpha: 0.2),
                                       blurRadius: 10,
                                       offset: Offset(0, 5),
                                     ),

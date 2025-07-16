@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whatsapp/features/chat/views/call_page.dart';
 import 'package:whatsapp/features/chat/views/chat_page.dart';
+import 'package:whatsapp/features/chat/views/logout_page.dart';
 import 'package:whatsapp/features/chat/views/page_contact.dart';
 import 'package:whatsapp/features/chat/views/profile_page.dart';
 
@@ -118,7 +119,6 @@ class _DashboardPageState extends State<DashboardPage>
                           ),
                           Spacer(),
                           Container(
-                            padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(16),
@@ -127,28 +127,26 @@ class _DashboardPageState extends State<DashboardPage>
                                 width: 1,
                               ),
                             ),
-                            child: Icon(
-                              Icons.search_rounded,
-                              color: Colors.white,
-                              size: 24,
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.search,
+                                color: Colors.white,
+                                size: 20,
+                              ),
                             ),
                           ),
                           SizedBox(width: 12),
                           Container(
-                            padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(15),
                               border: Border.all(
                                 color: Colors.white.withValues(alpha: 0.3),
                                 width: 1,
                               ),
                             ),
-                            child: Icon(
-                              Icons.notifications_rounded,
-                              color: Colors.white,
-                              size: 24,
-                            ),
+                            child: LogoutPage(),
                           ),
                         ],
                       ),
