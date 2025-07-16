@@ -6,12 +6,12 @@ import 'package:whatsapp/features/chat/views/call_page.dart';
 import 'package:whatsapp/features/chat/views/chat_page.dart';
 import 'package:whatsapp/features/chat/views/page_contact.dart';
 
-class HomePage extends StatefulWidget {
+class DashboardPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _DashboardPageState createState() => _DashboardPageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _DashboardPageState extends State<DashboardPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
