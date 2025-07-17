@@ -22,12 +22,23 @@ class ChatController extends GetxController {
         .listen((snapshot) {
           messages.value = snapshot.docs.map((doc) {
             final data = doc.data();
-            return types.TextMessage(
-              id: doc.id,
-              author: types.User(id: data['authorId']),
-              createdAt: data['createdAt'],
-              text: data['text'],
-            );
+            if (data['type'] == 'image') {
+              return types.ImageMessage(
+                id: doc.id,
+                author: types.User(id: data['authorId']),
+                createdAt: data['createdAt'],
+                uri: data['imageUrl'],
+                name: data['name'] ?? '',
+                size: 0,
+              );
+            } else {
+              return types.TextMessage(
+                id: doc.id,
+                author: types.User(id: data['authorId']),
+                createdAt: data['createdAt'],
+                text: data['text'],
+              );
+            }
           }).toList();
         });
   }
@@ -54,7 +65,7 @@ class ChatController extends GetxController {
         .child('chat_images')
         .child(chatId)
         .child(fileName);
-    final uploadTask = await ref.putFile(imageFile);
+    // final uploadTask = await ref.putFile(imageFile);
     final imageUrl = await ref.getDownloadURL();
     await FirebaseFirestore.instance
         .collection('chats')

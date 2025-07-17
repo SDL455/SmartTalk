@@ -68,7 +68,6 @@ class _MessagePageState extends State<MessagePage>
       id: otherUser.uid,
       firstName: otherUser.displayName,
     );
-    // TODO: Replace with actual current user from AuthController
     _user = types.User(id: 'currentUserId', firstName: 'Me');
     final chatId = _getChatId(_user.id, _otherUser.id);
     if (Get.isRegistered<ChatController>()) {
