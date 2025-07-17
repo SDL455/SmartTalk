@@ -1,86 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp/cores/colors/%E0%BA%B1app_theme.dart';
 import 'package:whatsapp/features/chat/views/message_page.dart';
-
-class Contact {
-  final String name;
-  final String phone;
-  final String email;
-  final String avatarUrl;
-
-  Contact({
-    required this.name,
-    required this.phone,
-    required this.email,
-    required this.avatarUrl,
-  });
-}
+import 'package:get/get.dart';
+import 'package:whatsapp/features/chat/controllers/contact_controller.dart';
 
 class PageContact extends StatelessWidget {
   const PageContact({super.key});
 
-  List<Contact> get contacts => [
-    Contact(
-      name: '\u0eaa\u0eb8\u0e9e\u0eb1\u0e99\u0e99\u0eb0',
-      phone: '020-12345678',
-      email: 'supanna@email.com',
-      avatarUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-    ),
-    Contact(
-      name: '\u0e88\u0eb1\u0e99\u0e97\u0eb0\u0e27\u0ebb\u0e87',
-      phone: '020-87654321',
-      email: 'chanthavong@email.com',
-      avatarUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final ContactController contactController = Get.put(ContactController());
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: AppTheme.primaryColor,
         elevation: 0,
-        title: Text(
-          '\u0ea5\u0eb2\u0e8d\u0e8a\u0eb7\u0ec9\u0e95\u0eb4\u0e94\u0e95\u0ec8\u0ead',
-        ),
+        title: Text('ລາຍຊື່ຕິດຕໍ່'),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(12),
-        itemCount: contacts.length,
-        itemBuilder: (context, index) {
-          final contact = contacts[index];
-          return ListTile(
-            contentPadding: const EdgeInsets.all(12),
-            leading: CircleAvatar(
-              radius: 28,
-              backgroundImage: NetworkImage(contact.avatarUrl),
-            ),
-            title: Text(
-              contact.name,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 4),
-                Text('\u0ec0\u0e9a\u0eb5\u0ec2\u0e97: ${contact.phone}'),
-                Text('\u0ead\u0eb5\u0ec0\u0ea1\u0ea7: ${contact.email}'),
-              ],
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => MessagePage()),
-              );
-            },
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: AppTheme.primaryColor,
-            ),
-          );
-        },
-      ),
+      body: Obx(() {
+        if (contactController.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        }
+        final users = contactController.onlineUsers;
+        if (users.isEmpty) {
+          return Center(child: Text('ບໍ່ມີຜູ້ໃຊ້ online ໃນຂະນະນີ້'));
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            final user = users[index];
+            return ListTile(
+              contentPadding: const EdgeInsets.all(12),
+              leading: CircleAvatar(
+                radius: 28,
+                backgroundImage:
+                    user.photoUrl != null && user.photoUrl!.isNotEmpty
+                    ? NetworkImage(user.photoUrl!)
+                    : null,
+                child: (user.photoUrl == null || user.photoUrl!.isEmpty)
+                    ? Icon(Icons.person, size: 32)
+                    : null,
+              ),
+              title: Text(
+                user.displayName,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 4),
+                  if (user.phone != null) Text('ເບີໂທ: ${user.phone}'),
+                  if (user.email != null) Text('ອີເມວ: ${user.email}'),
+                  Text(
+                    'ສະຖານະ: ${user.status ?? "-"}',
+                    style: TextStyle(
+                      color: user.status == 'online'
+                          ? Colors.green
+                          : Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Get.to(() => MessagePage(), arguments: user);
+              },
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                color: AppTheme.primaryColor,
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }

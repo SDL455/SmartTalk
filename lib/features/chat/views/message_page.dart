@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:get/get.dart';
 import 'package:whatsapp/cores/colors/%E0%BA%B1app_theme.dart';
-import 'package:whatsapp/cores/models/chat.dart';
 import 'package:whatsapp/features/chat/views/build_app_bar.dart';
 import 'widgets/chat_message_list.dart';
 import 'widgets/chat_input_field.dart';
 import 'dart:io';
+import 'package:whatsapp/cores/models/user.dart';
+import 'package:whatsapp/features/chat/controllers/chat_controller.dart';
 
 class MessagePage extends StatefulWidget {
   @override
@@ -15,11 +16,11 @@ class MessagePage extends StatefulWidget {
 
 class _MessagePageState extends State<MessagePage>
     with SingleTickerProviderStateMixin {
-  final List<types.Message> _messages = [];
-  final _user = types.User(id: '1');
-  final _otherUser = types.User(id: '2');
+  late types.User _user;
+  late types.User _otherUser;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  late ChatController _chatController;
 
   @override
   void initState() {
@@ -31,7 +32,6 @@ class _MessagePageState extends State<MessagePage>
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-    _loadMessages();
     _animationController.forward();
   }
 
@@ -41,36 +41,10 @@ class _MessagePageState extends State<MessagePage>
     super.dispose();
   }
 
-  void _loadMessages() {
-    final messages = [
-      types.TextMessage(
-        author: _otherUser,
-        createdAt: DateTime.now().millisecondsSinceEpoch - 60000,
-        id: '1',
-        text: 'ສະບາຍດີ! ເປັນແນວໃດແລ້ວ? 😊',
-      ),
-      types.TextMessage(
-        author: _user,
-        createdAt: DateTime.now().millisecondsSinceEpoch - 30000,
-        id: '2',
-        text: 'ສະບາຍດີ! ຂ້ອຍສະບາຍດີ, ຂອບໃຈທີ່ຖາມ! 🌟',
-      ),
-      types.TextMessage(
-        author: _otherUser,
-        createdAt: DateTime.now().millisecondsSinceEpoch - 15000,
-        id: '3',
-        text: 'ດີໃຈທີ່ໄດ້ຍິນແບບນັ້ນ! ວັນນີ້ມີຫຍັງພິເສດບໍ? 🎉',
-      ),
-    ];
-    setState(() {
-      _messages.addAll(messages);
-    });
-  }
-
-  void _addMessage(types.Message message) {
-    setState(() {
-      _messages.insert(0, message);
-    });
+  String _getChatId(String uid1, String uid2) {
+    // Always generate the same chatId for a pair
+    final sorted = [uid1, uid2]..sort();
+    return sorted.join('_');
   }
 
   void _handleSendPressed(types.PartialText message) {
@@ -80,31 +54,34 @@ class _MessagePageState extends State<MessagePage>
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       text: message.text,
     );
-
-    _addMessage(textMessage);
+    _chatController.sendMessage(textMessage);
   }
 
-  void _handleSendImage(File imageFile) {
-    final imageMessage = types.ImageMessage(
-      author: _user,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: imageFile.path.split('/').last,
-      size: imageFile.lengthSync(),
-      uri: imageFile.path,
-    );
-    _addMessage(imageMessage);
+  void _handleSendImage(File imageFile) async {
+    await _chatController.sendImageMessage(imageFile, _user);
   }
 
   @override
   Widget build(BuildContext context) {
-    final chat = Get.arguments as Chat?;
+    final UserModel otherUser = Get.arguments as UserModel;
+    _otherUser = types.User(
+      id: otherUser.uid,
+      firstName: otherUser.displayName,
+    );
+    // TODO: Replace with actual current user from AuthController
+    _user = types.User(id: 'currentUserId', firstName: 'Me');
+    final chatId = _getChatId(_user.id, _otherUser.id);
+    if (Get.isRegistered<ChatController>()) {
+      _chatController = Get.find<ChatController>();
+    } else {
+      _chatController = Get.put(ChatController(chatId));
+    }
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
-        child: buildAppBar(chat),
+        child: buildAppBar(null),
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
@@ -112,18 +89,11 @@ class _MessagePageState extends State<MessagePage>
           child: Column(
             children: [
               Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppTheme.backgroundGrey,
-                        AppTheme.backgroundGrey.withValues(alpha: 0.8),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
+                child: Obx(
+                  () => ChatMessageList(
+                    messages: _chatController.messages.toList(),
+                    user: _user,
                   ),
-                  child: ChatMessageList(messages: _messages, user: _user),
                 ),
               ),
               Container(

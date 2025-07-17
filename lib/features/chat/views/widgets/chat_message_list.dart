@@ -44,12 +44,19 @@ class ChatMessageList extends StatelessWidget {
               margin: const EdgeInsets.symmetric(vertical: 4),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  File(message.uri),
-                  width: 180,
-                  height: 180,
-                  fit: BoxFit.cover,
-                ),
+                child: message.uri.startsWith('http')
+                    ? Image.network(
+                        message.uri,
+                        width: 180,
+                        height: 180,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.file(
+                        File(message.uri),
+                        width: 180,
+                        height: 180,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
           );

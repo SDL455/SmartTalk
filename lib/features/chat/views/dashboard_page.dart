@@ -305,7 +305,7 @@ class _DashboardPageState extends State<DashboardPage>
           onPressed: () {
             Get.to(
               () => PageContact(),
-              transition: Transition.zoom,
+              transition: Transition.leftToRight,
               duration: Duration(milliseconds: 500),
             );
           },

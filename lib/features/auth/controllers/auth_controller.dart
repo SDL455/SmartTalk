@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
@@ -27,7 +28,19 @@ class AuthController extends GetxController {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
       await userCredential.user?.updateDisplayName(name);
-      // Optionally, save phone to Firestore or elsewhere
+
+      // เพิ่มส่วนนี้เพื่อบันทึกข้อมูลลง Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+            'displayName': name,
+            'phone': phone,
+            'email': email,
+            'photoUrl': userCredential.user?.photoURL ?? '',
+            'status': 'online', // หรือค่า default อื่นๆ
+          });
+
       Get.snackbar('Success', 'Account created successfully!');
       Get.offAllNamed('/dashboard');
     } on FirebaseAuthException catch (e) {
