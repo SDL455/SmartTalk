@@ -457,8 +457,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            if (_authController.isLoading.value)
-              Center(child: CircularProgressIndicator()),
+            // if (_authController.isLoading.value)
+            //   Center(child: CircularProgressIndicator()),
           ],
         ),
       ),

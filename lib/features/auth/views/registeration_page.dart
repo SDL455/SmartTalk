@@ -308,8 +308,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
             ),
-            if (_authController.isLoading.value)
-              Center(child: CircularProgressIndicator()),
+            // if (_authController.isLoading.value)
+            //   Center(child: CircularProgressIndicator()),
           ],
         ),
       ),
