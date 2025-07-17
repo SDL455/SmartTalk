@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whatsapp/features/auth/controllers/auth_controller.dart';
 import 'package:whatsapp/features/chat/views/widgets/%E0%BA%B6build_button.dart';
 
 class LogoutPage extends StatelessWidget {
-  const LogoutPage({super.key});
+  final AuthController _authController = Get.put(AuthController());
+  LogoutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +14,8 @@ class LogoutPage extends StatelessWidget {
         showDialog(
           context: context,
           barrierDismissible: true,
-          builder: (context) => const BeautifulLogoutDialog(),
+          builder: (context) =>
+              BeautifulLogoutDialog(authController: _authController),
         );
       },
       icon: Container(
@@ -36,7 +39,9 @@ class LogoutPage extends StatelessWidget {
 }
 
 class BeautifulLogoutDialog extends StatefulWidget {
-  const BeautifulLogoutDialog({super.key});
+  final AuthController authController;
+
+  const BeautifulLogoutDialog({super.key, required this.authController});
 
   @override
   State<BeautifulLogoutDialog> createState() => _BeautifulLogoutDialogState();
@@ -131,7 +136,7 @@ class _BeautifulLogoutDialogState extends State<BeautifulLogoutDialog>
                         ),
                         child: IconButton(
                           onPressed: () {
-                            Get.to('/login');
+                            widget.authController.logout();
                           },
                           icon: const Icon(
                             Icons.power_settings_new_rounded,
@@ -186,6 +191,7 @@ class _BeautifulLogoutDialogState extends State<BeautifulLogoutDialog>
                               isPrimary: true,
                               onPressed: () {
                                 Navigator.of(context).pop();
+                                widget.authController.logout();
                               },
                             ),
                           ),
