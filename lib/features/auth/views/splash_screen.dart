@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whatsapp/cores/services/user_service.dart';
+import 'package:whatsapp/cores/models/user.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -10,9 +12,18 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), () {
+    _checkAuthAndNavigate();
+  }
+
+  void _checkAuthAndNavigate() async {
+    UserService userService = UserService();
+    UserModel? user = await userService.loadUser();
+    await Future.delayed(Duration(seconds: 2)); // Optional: show splash for 2s
+    if (user != null) {
+      Get.offAllNamed('/dashboard');
+    } else {
       Get.offAllNamed('/login');
-    });
+    }
   }
 
   @override

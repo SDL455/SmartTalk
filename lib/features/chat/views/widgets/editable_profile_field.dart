@@ -41,8 +41,12 @@ class EditableProfileField extends StatelessWidget {
             color: isEditing ? Colors.grey[50] : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: isEditing
-                ? Border.all(color: AppTheme.primaryColor.withOpacity(0.3))
-                : Border.all(color: AppTheme.primaryColor.withOpacity(0.3)),
+                ? Border.all(
+                    color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                  )
+                : Border.all(
+                    color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                  ),
           ),
           child: Row(
             children: [
